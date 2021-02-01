@@ -1,0 +1,54 @@
+.calc-container {
+  width: 26%;
+}
+
+.calculator__keys {
+  display: grid;
+  /* other necessary CSS */
+}
+
+div {
+  margin: 0; /* horizontally centreing an element */
+}
+
+header {
+  background-color: #d1e0e0;
+  /* width: 330px; */
+  border-radius: 20px;
+  margin: 0 auto;
+  font-size: xx-large;
+  color: #000000;
+  text-align: right;
+  padding: 3px;
+}
+
+table {
+  background-color: #ffffff;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 20px;
+}
+
+td {
+  width: 110px;
+  height: 60px;
+  text-align: center;
+  font-size: xx-large;
+}
+
+.orange {
+  color: #ff3300;
+}
+
+td:active {
+  background-color: #e0e0d1;
+  border-radius: 20px;
+}
+
+button {
+  width: 6vw;
+  margin: 2px;
+  padding: 3px;
+}
