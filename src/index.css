@@ -1,4 +1,24 @@
+html {
+  --header-bg: #d1e0e0;
+}
+
+.light {
+  --btn-color: #f0f0f0;
+  --bg-color: #fff;
+  --font-color: #000;
+  --header-bg: #d1e0e0;
+}
+
+.dark {
+  --btn-color: #666;
+  --bg-color: #000;
+  --font-color: #fff;
+  --header-bg: #2e1f1f;
+}
+
 body {
+  background-color: var(--bg-color);
+  color: var(--font-color);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -7,23 +27,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+button {
+  background-color: var(--btn-color);
+  color: var(--font-color);
+}
+
+header {
+  color: var(--font-color);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
-}
-
-.light {
-  --btn-color: "#f0f0f0";
-  --bg-color: "#fff";
-  --font-color: "#000";
-  color: var(--font-color);
-}
-
-.dark {
-  --btn-color: "#666";
-  --bg-color: "#000";
-  --font-color: "#fff";
-  color: var(--font-color);
 }
 
 .container {
@@ -68,4 +83,13 @@ code {
   display: flex;
   flex-direction: row;
   padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.dir-col {
+  flex-direction: column;
+}
+
+.dir-row {
+  flex-direction: row;
 }
