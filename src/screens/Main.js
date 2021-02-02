@@ -1,45 +1,61 @@
 import React from "react";
+import CalcContainer from "../components/CalcContainer";
+import Row from "../components/Row";
+import Col from "../components/Col";
+import Switch from "../components/Switch";
+import Button from "../components/Button";
 import "./Main.css";
+import CONST from "../utils/Constants";
+import * as service from "../utils/Service";
 
 function Main({ ...props }) {
   const [result, setResult] = React.useState(0);
   const [holder, setHolder] = React.useState(0);
-  const [operation, setOperation] = React.useState(null);
-  const [isReset, setIsReset] = React.useState(false);
+  const [operations, setOperations] = React.useState([]);
+  const [preOperations, setPreOperations] = React.useState([]);
+  const [showAdvance, setShowAdvance] = React.useState(false);
+  const [dark, setDark] = React.useState(false);
 
   const updateOperation = (type) => {
-    if (operation) {
-      switch (operation) {
-        case "add":
+    if (operations.length > 0) {
+      switch (operations[operations.length - 1]) {
+        case CONST.OPS.ADDITION:
           setResult(parseInt(holder) + parseInt(result));
+          setHolder(parseInt(holder) + parseInt(result));
           break;
-        case "sub":
+        case CONST.OPS.SUBTRACT:
           setResult(parseInt(holder) - parseInt(result));
+          setHolder(parseInt(holder) - parseInt(result));
           break;
-        case "mul":
+        case CONST.OPS.MULTIPLY:
           setResult(parseInt(holder) * parseInt(result));
+          setHolder(parseInt(holder) * parseInt(result));
           break;
-        case "div":
+        case CONST.OPS.DIVIDE:
           setResult(parseInt(holder) / parseInt(result));
+          setHolder(parseInt(holder) / parseInt(result));
           break;
         default:
           break;
       }
+    } else {
+      setHolder(result);
     }
-    setOperation(type);
-    setHolder(result);
-    setIsReset(true);
+    setOperations([...operations, type]);
   };
 
   const clear = () => {
     setHolder(0);
     setResult(0);
+    setOperations([]);
+    setPreOperations([]);
   };
 
   const updateHolder = (val) => {
-    if (operation) {
-      if (isReset) {
+    if (operations.length > 0) {
+      if (operations.length !== preOperations.length) {
         setResult(val);
+        setPreOperations([...preOperations, operations[operations.length - 1]]);
       } else {
         setResult(parseInt(result) + "" + val);
       }
@@ -53,48 +69,95 @@ function Main({ ...props }) {
   };
 
   const showResult = () => {
-    setResult(holder + parseInt(result));
+    updateOperation(operations[operations.length - 1]);
     setHolder(0);
-    setOperation(null);
+    setOperations([]);
+    setPreOperations([]);
   };
+  document.documentElement.className = dark ? "dark" : "light";
   return (
-    <div className="container center">
-      <div className="box calc-container ">
+    <div className="container center dir-col">
+      <Row>
+        <Switch
+          label="Theme"
+          value={dark}
+          onChange={() => {
+            setDark(!dark);
+          }}
+        />
+      </Row>
+      <Row>
+        <Switch
+          label="Scientic Mode"
+          value={showAdvance}
+          onChange={() => setShowAdvance(!showAdvance)}
+        />
+      </Row>
+      <CalcContainer>
         <header id="screen">{result}</header>
-        <div className={"flex-row"}>
-          <div className={"flex-col"}>
+        <Row>
+          <Col>
             <div>
               {Array(9)
                 .fill()
                 .map((v, i) => {
                   return (
-                    <button
+                    <Button
+                      label={i + 1}
                       key={`num-${i + 1}`}
                       onClick={() => updateHolder(i + 1)}
-                    >
-                      {i + 1}
-                    </button>
+                    />
                   );
                 })}
             </div>
             <div>
-              <button data-action="clear" onClick={() => clear()}>
-                Clear
-              </button>
-              <button onClick={() => updateHolder(0)}>0</button>
-              <button data-action="calculate" onClick={showResult}>
-                =
-              </button>
+              <Button onClick={() => clear()} label="Clear" />
+              <Button onClick={() => updateHolder(0)} label="0" />
+              <Button onClick={showResult} label="=" />
             </div>
-          </div>
-          <div className={"flex-col"}>
-            <button onClick={() => updateOperation("add")}>+</button>
-            <button onClick={() => updateOperation("sub")}>-</button>
-            <button onClick={() => updateOperation("mul")}>&times;</button>
-            <button onClick={() => updateOperation("div")}>/</button>
-          </div>
-        </div>
-      </div>
+            {showAdvance && (
+              <div>
+                <Button
+                  onClick={() => {
+                    setResult(service.sign(result));
+                  }}
+                  label="Sign"
+                />
+                <Button
+                  onClick={() => {
+                    setResult(service.square(result));
+                  }}
+                  label="Square"
+                />
+                <Button
+                  onClick={() => {
+                    setResult(service.squareRoot(result));
+                  }}
+                  label="Square root"
+                />
+              </div>
+            )}
+          </Col>
+          <Col>
+            <Button
+              onClick={() => updateOperation(CONST.OPS.ADDITION)}
+              label="+"
+            />
+            <Button
+              onClick={() => updateOperation(CONST.OPS.SUBTRACT)}
+              label="-"
+            />
+            <Button
+              onClick={() => updateOperation(CONST.OPS.MULTIPLY)}
+              label="*"
+            />
+            <Button
+              onClick={() => updateOperation(CONST.OPS.DIVIDE)}
+              label="/"
+            />
+          </Col>
+        </Row>
+      </CalcContainer>
     </div>
   );
 }
